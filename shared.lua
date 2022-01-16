@@ -1,3 +1,7 @@
+**qb-smallreasources/server/consumables.lua**
+```lua
+QBCore.Functions.CreateUsableItems("ifak", function(source, items)
+    local src = source
     TriggerClientEvent('consumables:client:AddHealthIfak', src)
 end)
 ```
