@@ -60,7 +60,7 @@ end
     RegisterNetEvent('titan:TakeOutVehicle')
     AddEventHandler('titan:TakeOutVehicle', function(data)
       local pos = GetEntityCoords(PlayerPedId())
-      local takeDist = Config.Locations['vehicle'][data.currentSelection]
+      local takeDist = Config.Locations['titangarage'][data.currentSelection]
       takeDist = vector3(takeDist.x, takeDist.y,  takeDist.z)
       if #(pos - takeDist) <= 1.5 then
           local vehicle = data.vehicle
@@ -72,7 +72,7 @@ RegisterNetEvent('titan:garageHeader')
 AddEventHandler('titan:garageHeader', function(data)
     local ped = PlayerPedId()
     local pos = GetEntityCoords()
-    local takeDist = Config.Locations['garage'][data.currentSelection]
+    local takeDist = Config.Locations['titangarage'][data.currentSelection]
     takeDist = vector3(takeDist.x, takeDist.y, takeDist.z)
     if #(pos - takeDist) <= 1.5 then
       MenuGarage(data.currentSelection)
@@ -102,6 +102,47 @@ end)
 
 --==================================================
 --                    END GARAGE
+--==================================================
+
+--==================================================
+--                 START Helicopter
+--==================================================
+
+RegisterNetEvent('titan:helicopter')
+AddEventHandler('titan:helicopter', function(data)
+  if LocalPlayer.state.isLoggedIn and PlayerJob.name == "titan" then
+    for k, v in pairs(Config.Locations["titanheli"]) do
+      if #(pos - vector3(v.x, v.y, v.z)) < 7.5 then
+        if onDuty then
+          sleep = 5
+          if #(pos - vector3(v.x, v.y, v.z)) < 1.5 then
+            if IsPedInAnyVehicle(PlayerPedId(), false) then
+              DrawText3D(v.x, v.y, v.z, "~g~E~w~ - Store Helicopter")
+            else
+              DrawText3D(v.x, v.y, v.z, "~g~E~w~ - Take A Helicopter")
+            end
+              QBCore.Functions.DeleteVehicle(GetVehicelPedIsIn(PlayerPedId()))
+            else
+              local coords = Config.Locations["titanheli"]
+              QBCore.Functions.SpawnVehicle(Config.TitanHelicopter, function(veh)
+                SetVehicleLivery(veh, 0)
+                SetVehicleMod(veh, 0, 48)
+                SetVehicleNumberPlateText(veh, "TITAN"..tostring(math.random(1000, 9999)))
+                SetEntityHeading(veh, coords.w)
+                exports['lj-fuel']:SetFuel(veh, 100.0)
+                closeMenuFull()
+                TaskWarpPedIntoVehicle(PlayedPedId(), veh, -1)
+                TriggerEvent("vehiclekeys:client:SetOwner", QBCore.Functions.GrtPlate(veh))
+                SetVehicleEngineOn(veh, true, true)
+              end, coords, true)
+            end
+          end
+        end
+      end
+    end
+  end)
+--==================================================
+--                END Helicopter
 --==================================================
 
 --==================================================

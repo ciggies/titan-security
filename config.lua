@@ -11,6 +11,17 @@ Config.Store = {
     }
 }
 
+Config.Locations - {
+    -- Heli Location
+    ["titanheli"] = {
+        [1] = vector3(),
+    },
+    -- Vehicle Garage
+    ["titangarage"] = {
+        [1] = vector3(),
+    },
+}
+
 Config.titanVehicles = {
     -- These lads suck
     [0] = {
