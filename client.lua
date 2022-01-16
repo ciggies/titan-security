@@ -1,5 +1,7 @@
 local exports['qb-core']:GetCoreObject()
 
+currentGarage = 0
+
 RegisterNetEvent('titan:security')
 AddEventHandler('titan:security', function()
     local src = source
@@ -16,6 +18,91 @@ AddEventHandler('titan:personalstash', function()
         TriggerEvent('inventory:client:SetCurrentStash', 'titanstash'..QBCore.Functions.GetPlayerData().citizenid)
     end
 end)
+
+--==================================================
+--                      Garage
+--==================================================
+
+function MenuGarge(currentSelection)
+  local vehicleMenu = {
+    {
+    header = "Titan Vehicles",
+    isMenuHeader - true
+    }
+  }
+
+  local titanVehicles = Config.titanVehicles[QBCore.Functions.GetPlayerData().job.grade.level]
+  for veh, label in pairs(authorizedVehicles) do
+    vehicleMenu[#vehicleMenu+1] = {
+      header = label,
+      txt = "",
+      params = {
+          event = "titan:TakeOutVehicle"
+          args = {
+            vehicle = veh,
+            currentSelection = currentSelection
+          }
+        }
+      }
+    end
+  end
+
+    vehicleMenu[#vehicleMenu+1] = {
+    header = "⬅ Close Menu",
+    txt = "",
+    params = {
+      event = "qb-menu:client:closeMenu"
+    }
+  }
+  exports['qb-menu']:openMenu(vehicleMenu)
+end
+
+    RegisterNetEvent('titan:TakeOutVehicle')
+    AddEventHandler('titan:TakeOutVehicle', function(data)
+      local pos = GetEntityCoords(PlayerPedId())
+      local takeDist = Config.Locations['vehicle'][data.currentSelection]
+      takeDist = vector3(takeDist.x, takeDist.y,  takeDist.z)
+      if #(pos - takeDist) <= 1.5 then
+          local vehicle = data.vehicle
+          TakeOutVehicle(vehicle)
+      end
+  end)
+
+RegisterNetEvent('titan:garageHeader')
+AddEventHandler('titan:garageHeader', function(data)
+    local ped = PlayerPedId()
+    local pos = GetEntityCoords()
+    local takeDist = Config.Locations['garage'][data.currentSelection]
+    takeDist = vector3(takeDist.x, takeDist.y, takeDist.z)
+    if #(pos - takeDist) <= 1.5 then
+      MenuGarage(data.currentSelection)
+      currentGarage = data.currentSelection
+    end
+end)
+
+RegisterNetEvent('titan:garage')
+AddEventHandler('titan:garage', function()
+  if LocalPlayer.state.isLoggedIn and PlayerJob.name == "titan" then
+      if not headerDrawn then
+        headerDrawn = true
+          exports['qb-menu']:showHeader({
+            {
+              header = 'Titan Garage',
+              params = {
+                event = ''
+                args = {
+                  currentSelection = k,
+                }
+              }
+            }
+          })
+    
+end)
+
+
+--==================================================
+--                    END GARAGE
+--==================================================
 
 --==================================================
 --                      ARMORY
