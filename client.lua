@@ -1,6 +1,22 @@
 local QBCore = exports['qb-core']:GetCoreObject()
 
+local heli = vector3(-411.6, 1207.5, 325.64)
 currentGarage = 0
+
+local function DrawText3D(x, y, z, text)
+  SetTextScale(0.35, 0.35)
+  SetTextFont(4)
+  SetTextProportional(1)
+  SetTextColour(255, 255, 255, 215)
+  SetTextEntry("STRING")
+  SetTextCentre(true)
+  AddTextComponentString(text)
+  SetDrawOrigin(x,y,z, 0)
+  DrawText(0.0, 0.0)
+  local factor = (string.len(text)) / 370
+  DrawRect(0.0, 0.0+0.0125, 0.017+ factor, 0.03, 0, 0, 0, 75)
+  ClearDrawOrigin()
+end
 
 RegisterNetEvent('titan:security')
 AddEventHandler('titan:security', function()
@@ -13,7 +29,7 @@ end)
 
 RegisterNetEvent('titan:personal:stash')
 AddEventHandler('titan:personal:stash', function()
-    if LocalPlayer.state.isLoggedIn and PlayerJob.name == "titan" then
+    if LocalPlayer.state.isLoggedIn and QBCore.Functions.GetPlayerData().job.name == "titan" then
         TriggerServerEvent('inventory:server:OpenInventory', 'stash', 'titanstash'..QBCore.Functions.GetPlayerData().citizenid)
         TriggerEvent('inventory:client:SetCurrentStash', 'titanstash'..QBCore.Functions.GetPlayerData().citizenid)
     end
@@ -81,7 +97,7 @@ end)
 
 RegisterNetEvent('titan:garage')
 AddEventHandler('titan:garage', function()
-  if LocalPlayer.state.isLoggedIn and PlayerJob.name == "titan" then
+  if LocalPlayer.state.isLoggedIn and QBCore.Functions.GetPlayerData().job.name == "titan" then
       if not headerDrawn then
         headerDrawn = true
           exports['qb-menu']:showHeader({
@@ -109,9 +125,33 @@ AddEventHandler('titan:garage', function()
 --                 START Helicopter
 --==================================================
 
-RegisterNetEvent('titan:helicopter')
+RegisterNetEvent('fuckwit:helicopter')
+AddEventHandler('fuckwit:helicopter', function(data)
+    if QBCore.Functions.GetPlayerData().job.name == "titan" then
+      DrawText3D(heli.x, heli.y, heli.z, "PLEASE WORK")
+      SetVehicleNumberPlateText(veh, "TITAN"..tostring(math.random(1000, 9999)))
+        QBCore.Functions.SpawnVehicle('POLMAV', function(veh)
+          TriggerEvent("vehiclekeys:client:SetOwner", QBCore.Functions.GetPlate(veh))
+        end)
+      end
+
+      Citizen.CreateThread(
+        function()
+          while true do
+            Citizen.Wait(0)
+            local pos = GetEntityCoords(PlayerPedId())
+            for k, v in paris(Config.Locations["titanheli"]) do
+              if #(pos - vector3(v.x, v.y, v.z)) < 7.5 then
+                DrawText3D(v.x, v.y, v.z, "~g~E~w~ Fucking work cuz")
+            end
+          end
+        end
+      end)
+
+--[[RegisterNetEvent('titan:helicopter')
 AddEventHandler('titan:helicopter', function(data)
-  if LocalPlayer.state.isLoggedIn and PlayerJob.name == "titan" then
+  if LocalPlayer.state.isLoggedIn and QBCore.Functions.GetPlayerData().job.name == "titan" then
+    local pos = GetEntityCoords(PlayerPedId())
     for k, v in pairs(Config.Locations["titanheli"]) do
       if #(pos - vector3(v.x, v.y, v.z)) < 7.5 then
         if onDuty then
@@ -133,7 +173,7 @@ AddEventHandler('titan:helicopter', function(data)
                 exports['lj-fuel']:SetFuel(veh, 100.0)
                 closeMenuFull()
                 TaskWarpPedIntoVehicle(PlayedPedId(), veh, -1)
-                TriggerEvent("vehiclekeys:client:SetOwner", QBCore.Functions.GrtPlate(veh))
+                TriggerEvent("vehiclekeys:client:SetOwner", QBCore.Functions.GetPlate(veh))
                 SetVehicleEngineOn(veh, true, true)
               end, coords, true)
             end
@@ -141,7 +181,7 @@ AddEventHandler('titan:helicopter', function(data)
         end
       end
     end
-  end)
+  end)]]
 --==================================================
 --                END Helicopter
 --==================================================
@@ -186,3 +226,4 @@ exports["qb-target"]:AddCircleZone("personalstash", vector3(441.21, -981.89, 30.
        job = {"all"},
       distance = 2.1
   })
+end)
