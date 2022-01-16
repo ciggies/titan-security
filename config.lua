@@ -4,49 +4,49 @@ Config.Store = {
         label = "Titan Armory",  slots = 5,     -- 5 Slots set feel free to change the number to as many as you need
         items = {
         [1] = { name = "ifak", price = 250, amount = 1, info = {}, type = "item", slot = 1, },    --Items just copy and paste this line and change the slot number
-        [2] = { name = "", price = 1, amount = 1, info = {}, type = "item", slot = 2, },
-        [3] = { name = "", price = 1, amount = 1, info = {}, type = "item", slot = 3, },
-        [4] = { name = "", price = 1, amount = 1, info = {}, type = "item", slot = 4, },
-        [5] = { name = "", price = 1, amount = 1, info = {}, type = "item", slot = 5, }     -- if adding more keep this at the end or add a comma to the end of the line
-    }
+        [2] = { name = "ifak", price = 1, amount = 1, info = {}, type = "item", slot = 2, },
+        [3] = { name = "ifak", price = 1, amount = 1, info = {}, type = "item", slot = 3, },
+        [4] = { name = "ifak", price = 1, amount = 1, info = {}, type = "item", slot = 4, },
+        [5] = { name = "ifak", price = 1, amount = 1, info = {}, type = "item", slot = 5, }     -- if adding more keep this at the end or add a comma to the end of the line
+    },
 }
 
-Config.Locations - {
+Config.Locations = {
     -- Heli Location
     ["titanheli"] = {
-        [1] = vector3(),
+        [1] = vector3(63.06, 95.29, 78.83),
     },
     -- Vehicle Garage
     ["titangarage"] = {
-        [1] = vector3(),
+        [1] = vector3(73.01, 90.97, 78.8),
     },
 }
 
 Config.titanVehicles = {
     -- These lads suck
     [0] = {
-        ["vehicle"] = "vehicle",
+        ["adder"] = "adder",
     },
     -- Kinda getting better
     [1] = {
-        ["vehicle"] = "vehicle",
+        ["zentorno"] = "zentorno",
     },
     -- Yeah its alright i guess
     [2] = {
-        ["vehicle"] = "vehicle",
+        ["zentorno"] = "zentorno",
     },
     -- wow acutally going places
     [3] = {
-        ["vehicle"] = "vehicle",
+        ["adder"] = "adder",
     },
     -- you've really gone places now
     [4] = {
-        ["vehicle"] = "vehicle",
+        ["adder"] = "adder",
     },
     -- owns a business wow must be rich
     [5] = {
-        ["vehicle"] = "vehicle",
+        ["adder"] = "adder",
     }
 }
 
-Config.TitanHelicopter = "" -- Forgot the spawn code
+Config.TitanHelicopter = "POLMAV" -- Forgot the spawn code
