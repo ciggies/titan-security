@@ -1,0 +1,1 @@
+local exports['qb-core']:GetCoreObject()
