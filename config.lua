@@ -48,3 +48,5 @@ Config.titanVehicles = {
         ["vehicle"] = "vehicle",
     }
 }
+
+Config.TitanHelicopter = "" -- Forgot the spawn code
