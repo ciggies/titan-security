@@ -6,7 +6,7 @@ RegisterNetEvent('titan:security')
 AddEventHandler('titan:security', function()
     local src = source
     local Player = QBCore.Functions.GetPlayer(src)
-        if Player.PlayerData.job.name == "police" then
+        if Player.PlayerData.job.name == "titan" then
             TriggerServerEvent("inventory:server:OpenInventory", "shop", "TitanStore", Config.Store)    -- just opens the store
         end
 end)
