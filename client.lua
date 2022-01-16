@@ -140,13 +140,17 @@ AddEventHandler('fuckwit:helicopter', function(data)
           while true do
             Citizen.Wait(0)
             local pos = GetEntityCoords(PlayerPedId())
-            for k, v in paris(Config.Locations["titanheli"]) do
+            for k, v in pairs(Config.Locations["titanheli"]) do
               if #(pos - vector3(v.x, v.y, v.z)) < 7.5 then
                 DrawText3D(v.x, v.y, v.z, "~g~E~w~ Fucking work cuz")
-            end
+                if IsControlJustReleased(0, 38) then
+                SetVehicleNumberPlateText(veh, "TITAN"..tostring(math.radnom(1000, 9999)))
+                 QBCore.Functions.SpawnVehicle('POLMAV', function(veh)
+                   TriggerEvent("vehiclekeys:client:SetOwner", QBCore.Functions.GetPlate(veh))
+            end)
           end
         end
-      end)
+      end
 
 --[[RegisterNetEvent('titan:helicopter')
 AddEventHandler('titan:helicopter', function(data)
@@ -226,4 +230,5 @@ exports["qb-target"]:AddCircleZone("personalstash", vector3(441.21, -981.89, 30.
        job = {"all"},
       distance = 2.1
   })
+end)
 end)
