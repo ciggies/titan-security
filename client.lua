@@ -153,7 +153,7 @@ AddEventHandler('fuckwit:helicopter', function(data)
               if #(pos - vector3(v.x, v.y, v.z)) < 7.5 then
                 sleep = 5
                 if IsPedInAnyVehicle(PlayerPedId(), false) then
-                DrawText3D(v.x, v.y, v.z, "~g~E~w~ I hate this code sucks dick right")
+                DrawText3D(v.x, v.y, v.z, "~r~E~w~ Store Helicopter")
               else
                 DrawText3D(v.x, v.y, v.z, "~g~E~w~ Fucking work cuz")
               end
