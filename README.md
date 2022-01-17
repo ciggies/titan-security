@@ -1,1 +1,1 @@
-Legit just go bored and amde this script for titan security legit just a shop script with qb-target export inbuilt with it
+**Got Bored So i made this script has garages using the E runs at 0.00ms when not in use and 0.10 when the 3D text renders in, Armory and Personal Stash are getting in built into the scripts using qb-target exports.**
