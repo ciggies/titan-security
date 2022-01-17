@@ -18,11 +18,11 @@ local function DrawText3D(x, y, z, text)
   ClearDrawOrigin()
 end
 
---[[RegisterNetEvent('titan:security')
+RegisterNetEvent('titan:security')
 AddEventHandler('titan:security', function()
     local src = source
-    local Player = QBCore.Functions.GetPlayer(src)
-        if Player.PlayerData.job.name == "titan" then
+--    local Player = QBCore.Functions.GetPlayer(src)
+        if QBCore.Functions.GetPlayerData().job.name == "titan" then
             TriggerServerEvent("inventory:server:OpenInventory", "shop", "TitanStore", Config.Store)    -- just opens the store
         end
 end)
@@ -39,7 +39,7 @@ end)
 --                      Garage
 --==================================================
 
-function MenuGarge(currentSelection)
+--[[function MenuGarge(currentSelection)
   local vehicleMenu = {
     {
     header = "Titan Vehicles",
@@ -147,7 +147,7 @@ AddEventHandler('fuckwit:helicopter', function(data)
         Wait(1000)  
         while true do
             local sleep = 2000
-            if QBCore.Functions.GetPlayerData().job.name == "titan" then
+            if LocalPlayer.state.isLoggedIn and QBCore.Functions.GetPlayerData().job.name == "titan" then
             local pos = GetEntityCoords(PlayerPedId())
             for k, v in pairs(Config.Locations["titanheli"]) do
               if #(pos - vector3(v.x, v.y, v.z)) < 7.5 then
@@ -164,6 +164,7 @@ AddEventHandler('fuckwit:helicopter', function(data)
                 SetVehicleNumberPlateText(veh, "TITAN"..tostring(math.random(1000, 9999)))
                  QBCore.Functions.SpawnVehicle('POLMAV', function(veh)
                   TaskWarpPedIntoVehicle(PlayerPedId(), veh, -1)
+                  exports['lj-fuel']:SetFuel(veh, 100.0)
                    TriggerEvent("vehiclekeys:client:SetOwner", QBCore.Functions.GetPlate(veh))
                    SetVehicleEngineOn(veh, true, true)
                  end)
@@ -184,10 +185,10 @@ end)
 --                      ARMORY
 --==================================================
 
-exports["qb-target"]:AddCircleZone("tarmory", vector3(441.21, -981.89, 30.69), 1.0, {
+exports["qb-target"]:AddCircleZone("tarmory", vector3(-424.41, 1213.82, 325.76), 1.0, {
   name ="tarmory",
   useZ = true,
-  debugPoly=false
+  debugPoly=true
   }, {
       options = {
           {
@@ -205,14 +206,14 @@ exports["qb-target"]:AddCircleZone("tarmory", vector3(441.21, -981.89, 30.69), 1
 --==================================================
 
 
-exports["qb-target"]:AddCircleZone("personalstash", vector3(441.21, -981.89, 30.69), 1.0, {
+exports["qb-target"]:AddCircleZone("personalstash", vector3(-426.27, 1215.98, 325.76), 1.0, {
   name ="personalstash",
   useZ = true,
   debugPoly=false
   }, {
       options = {
           {
-              event = "titan:personalstash",
+              event = "titan:personal:stash",
               icon = "as fa-lock",
               label = "Personal Locker",
           },
