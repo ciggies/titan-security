@@ -39,16 +39,32 @@ end)
 --                      Garage
 --==================================================
 
---[[function MenuGarge(currentSelection)
+function TakeOutVehicle(vehicleInfo)
+--  local coords = Config.Locations["titangarage"][currentGarage]
+--  if coords then
+      QBCore.Functions.SpawnVehicle(vehicleInfo, function(veh)
+          SetCarItemsInfo()
+          SetVehicleNumberPlateText(veh, "TITAN"..tostring(math.random(1000, 9999)))
+          SetEntityHeading(veh)
+          exports['lj-fuel']:SetFuel(veh, 100.0)
+          closeMenuFull()
+          TaskWarpPedIntoVehicle(PlayerPedId(), veh, -1)
+          TriggerEvent("vehiclekeys:client:SetOwner", QBCore.Functions.GetPlate(veh))
+--          TriggerServerEvent("inventory:server:addTrunkItems", QBCore.Functions.GetPlate(veh), Config.CarItems)
+          SetVehicleEngineOn(veh, true, true)
+      end, true)
+  end
+
+function MenuGarage(currentSelection)
   local vehicleMenu = {
     {
     header = "Titan Vehicles",
-    isMenuHeader - true
+    isMenuHeader = true
     }
   }
 
   local titanVehicles = Config.titanVehicles[QBCore.Functions.GetPlayerData().job.grade.level]
-  for veh, label in pairs(authorizedVehicles) do
+  for veh, label in pairs(titanVehicles) do
     vehicleMenu[#vehicleMenu+1] = {
       header = label,
       txt = "",
@@ -115,7 +131,7 @@ AddEventHandler('titan:garage', function()
       end
     end)
 
-   Citizen.CreateThread(
+--[[   Citizen.CreateThread(
       function()
         while true do
           Citizen.Wait(0)
