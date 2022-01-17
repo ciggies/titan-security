@@ -143,15 +143,16 @@ AddEventHandler('fuckwit:helicopter', function(data)
       end
     end)]]
 
-      Citizen.CreateThread(
-        function()
-          Citizen.Wait(1000)
-          while true do
+      Citizen.CreateThread(function()
+        Wait(1000)  
+        while true do
+            local sleep = 2000
             local jobName = QBCore.Functions.GetPlayerData().job.name == "titan"
+            if jobName == true then
             local pos = GetEntityCoords(PlayerPedId())
             for k, v in pairs(Config.Locations["titanheli"]) do
-              if jobName then
               if #(pos - vector3(v.x, v.y, v.z)) < 7.5 then
+                sleep = 5
                 if IsPedInAnyVehicle(PlayerPedId(), false) then
                 DrawText3D(v.x, v.y, v.z, "~g~E~w~ I hate this code sucks dick right")
               else
@@ -172,6 +173,7 @@ AddEventHandler('fuckwit:helicopter', function(data)
         end
       end
     end
+    Wait(sleep)
   end
 end)
 
