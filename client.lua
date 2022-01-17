@@ -18,7 +18,7 @@ local function DrawText3D(x, y, z, text)
   ClearDrawOrigin()
 end
 
-RegisterNetEvent('titan:security')
+--[[RegisterNetEvent('titan:security')
 AddEventHandler('titan:security', function()
     local src = source
     local Player = QBCore.Functions.GetPlayer(src)
@@ -115,6 +115,14 @@ AddEventHandler('titan:garage', function()
       end
     end)
 
+   Citizen.CreateThread(
+      function()
+        while true do
+          Citizen.Wait(0)
+          local pos = GetEntityCoords(PlayerPedId())
+
+    )]]
+
 
 
 --==================================================
@@ -125,34 +133,47 @@ AddEventHandler('titan:garage', function()
 --                 START Helicopter
 --==================================================
 
-RegisterNetEvent('fuckwit:helicopter')
+--[[RegisterNetEvent('fuckwit:helicopter')
 AddEventHandler('fuckwit:helicopter', function(data)
     if QBCore.Functions.GetPlayerData().job.name == "titan" then
-      DrawText3D(heli.x, heli.y, heli.z, "PLEASE WORK")
       SetVehicleNumberPlateText(veh, "TITAN"..tostring(math.random(1000, 9999)))
         QBCore.Functions.SpawnVehicle('POLMAV', function(veh)
           TriggerEvent("vehiclekeys:client:SetOwner", QBCore.Functions.GetPlate(veh))
         end)
       end
-    end)
+    end)]]
 
       Citizen.CreateThread(
         function()
+          Citizen.Wait(1000)
           while true do
-            Citizen.Wait(0)
+            local jobName = QBCore.Functions.GetPlayerData().job.name == "titan"
             local pos = GetEntityCoords(PlayerPedId())
             for k, v in pairs(Config.Locations["titanheli"]) do
+              if jobName then
               if #(pos - vector3(v.x, v.y, v.z)) < 7.5 then
+                if IsPedInAnyVehicle(PlayerPedId(), false) then
+                DrawText3D(v.x, v.y, v.z, "~g~E~w~ I hate this code sucks dick right")
+              else
                 DrawText3D(v.x, v.y, v.z, "~g~E~w~ Fucking work cuz")
+              end
                 if IsControlJustReleased(0, 38) then
+                  if IsPedInAnyVehicle(PlayerPedId(), false) then
+                    QBCore.Functions.DeleteVehicle(GetVehiclePedIsIn(PlayerPedId()))
+                  else
                 SetVehicleNumberPlateText(veh, "TITAN"..tostring(math.random(1000, 9999)))
                  QBCore.Functions.SpawnVehicle('POLMAV', function(veh)
+                  TaskWarpPedIntoVehicle(PlayerPedId(), veh, -1)
                    TriggerEvent("vehiclekeys:client:SetOwner", QBCore.Functions.GetPlate(veh))
-                   TaskWarpPedIntoVehicle(PlayerPedId(), veh, -1)
-            end)
+                   SetVehicleEngineOn(veh, true, true)
+                 end)
+            end
           end
         end
       end
+    end
+  end
+end)
 
 --==================================================
 --                END Helicopter
@@ -198,5 +219,3 @@ exports["qb-target"]:AddCircleZone("personalstash", vector3(441.21, -981.89, 30.
        job = {"all"},
       distance = 2.1
   })
-end
-end)
