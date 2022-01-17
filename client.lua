@@ -147,8 +147,7 @@ AddEventHandler('fuckwit:helicopter', function(data)
         Wait(1000)  
         while true do
             local sleep = 2000
-            local jobName = QBCore.Functions.GetPlayerData().job.name == "titan"
-            if jobName == true then
+            if QBCore.Functions.GetPlayerData().job.name == "titan" then
             local pos = GetEntityCoords(PlayerPedId())
             for k, v in pairs(Config.Locations["titanheli"]) do
               if #(pos - vector3(v.x, v.y, v.z)) < 7.5 then
