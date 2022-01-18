@@ -1,6 +1,7 @@
 local QBCore = exports['qb-core']:GetCoreObject()
 
 local heli = vector3(-411.6, 1207.5, 325.64)
+local ClosestShop = nil
 currentGarage = 0
 
 local function DrawText3D(x, y, z, text)
@@ -39,7 +40,7 @@ end)
 --                      Garage
 --==================================================
 
-function TakeOutVehicle(vehicleInfo)
+--[[function TakeOutVehicle(vehicleInfo)
 --  local coords = Config.Locations["titangarage"][currentGarage]
 --  if coords then
       QBCore.Functions.SpawnVehicle(vehicleInfo, function(veh)
@@ -52,8 +53,8 @@ function TakeOutVehicle(vehicleInfo)
           TriggerEvent("vehiclekeys:client:SetOwner", QBCore.Functions.GetPlate(veh))
 --          TriggerServerEvent("inventory:server:addTrunkItems", QBCore.Functions.GetPlate(veh), Config.CarItems)
           SetVehicleEngineOn(veh, true, true)
-      end, true)
-  end
+      end)
+    end
 
 function MenuGarage(currentSelection)
   local vehicleMenu = {
@@ -90,26 +91,24 @@ end
 
     RegisterNetEvent('titan:TakeOutVehicle')
     AddEventHandler('titan:TakeOutVehicle', function(data)
-      local pos = GetEntityCoords(PlayerPedId())
-      local takeDist = Config.Locations['titangarage'][data.currentSelection]
-      takeDist = vector3(takeDist.x, takeDist.y,  takeDist.z)
-      if #(pos - takeDist) <= 1.5 then
+--      local pos = GetEntityCoords(PlayerPedId())
+--      local takeDist = Config.Locations['titangarage'][data.currentSelection]
+--      takeDist = vector3(takeDist.x, takeDist.y,  takeDist.z)
+--      if #(pos - takeDist) <= 1.5 then
           local vehicle = data.vehicle
           TakeOutVehicle(vehicle)
-      end
-  end)
+      end)
 
 RegisterNetEvent('titan:garageHeader')
 AddEventHandler('titan:garageHeader', function(data)
     local ped = PlayerPedId()
     local pos = GetEntityCoords()
     local takeDist = Config.Locations['titangarage'][data.currentSelection]
-    takeDist = vector3(takeDist.x, takeDist.y, takeDist.z)
-    if #(pos - takeDist) <= 1.5 then
+     takeDist = vector3(takeDist.x, takeDist.y, takeDist.z)
+     if #(pos - takeDist) <= 1.5 then
       MenuGarage(data.currentSelection)
       currentGarage = data.currentSelection
-    end
-end)
+  end)
 
 RegisterNetEvent('titan:garage')
 AddEventHandler('titan:garage', function()
@@ -131,16 +130,159 @@ AddEventHandler('titan:garage', function()
       end
     end)
 
---[[   Citizen.CreateThread(
-      function()
-        while true do
-          Citizen.Wait(0)
+    CreateThread(function()
+      Wait(1000)
+      while true do
+      local headerDrawn = false
+        local sleep = 2000 
+        if LocalPlayer.state.isLoggedIn and QBCore.Functions.GetPlayerData().job.name == "titan" then
           local pos = GetEntityCoords(PlayerPedId())
+          for k, v in pairs(Config.Locations['titangarage']) do
+            if #(pos - vector3(v.x, v.y, v.z)) < 7.5 then
+              sleep = 5
+              if IsPedInAnyVehicle(PlayerPedId(), false) then
+                DrawText3D(v.x, v.y, v.z, "~r~E~w~ Store Shitter")
+              else
+                if not headerDrawn then
+                  headerDrawn = true
+                  exports['qb-menu']:showHeader({
+                    {
+                      header = 'Titan Garage',
+                      params = {
+                        event = 'titan:garageHeader',
+                        args = {
+                          currentSelection = k,
+                        }
+                      }
+                    }
+                  })
+                end
+              end
+              if IsControlJustReleased(0, 38) then
+                if IsPedInAnyVehicle(PlayerPedId(), false) then
+                  QBCore.Functions.DeleteVehicle(GetVehiclePedIsIn(PlayerPedId()))
+                end
+              end
+            else
+              if headerDrawn then
+                headerDrawn = false
+                exports['qb-menu']:closeMenu()
+              end
+            end
+          end
+        end
+      end
+      Wait(sleep)
+    end)]]
 
-    )]]
 
+--[[Citizen.CreateThread(function(data)
+  Wait(1000)
+  while true do
+    local sleep = 2000
+    if LocalPlayer.state.isLoggedIn and QBCore.Functions.GetPlayerData().job.name == "titan" then
+      local pos = GetEntityCoords(PlayerPedId())
+      for k, v in pairs(Config.Locations["titangarage"]) do
+        if #(pos - vector3(v.x, v.y, v.z)) < 7.5 then
+          sleep = 5
+          if IsPedInAnyVehicle(PlayerPedId(), false) then
+            DrawText3D(v.x, v.y, v.z, "~r~E~w~ Store Vehicle")
+          else
+            DrawText3D(v.x, v.y, v.z, "~g~E~w~ Vehicle")
+          end
+          if IsControlJustReleased(0, 38) then
+            if IsPedInAnyVehicle(PlayerPedId(), false) then
+              QBCore.Functions.DeleteVehicle(GetVehiclePedIsIn(PlayerPedId()))
+            else
+              SetVehicleNumberPlateText(veh, "TITAN"..tostring(math.random(1000, 9999)))
+              -- TriggerEvent('titan:garageHeader')
+              TaskWarpPedIntoVehicle(PlayerPedId(), veh, -1)
+              exports['lj-fuel']:SetFuel(veh, 100.0)
+              TriggerEvent('vehiclekeys:client:SetOwner', QBCore.Functions.GetPlate(veh))
+              SetVehicleEngineOn(veh, true, true)
+            end
+          end
+        end
+      end
+    end
+  end
+end)]]
 
+RegisterNetEvent('titan:menu', function(data)
+  local id = data.id
+  local number = data.number
+  TriggerEvent('nh-context:sendMenu', {
+      {
+          id = 1,
+          header = "< Go Back",
+          txt = "",
+          params = {
+              event = "titan:menu"
+          }
+      },
+      {
+          id = 2,     -- If your copy and pasteing this code below make sure to cahnge the ID
+          header = "APC", --- This is the first vehicle can this to what ever
+          txt = "This APC is armored",  -- Basically a description of the vehicle
+          params = {
+            event = "titan:cars"
+          }
+      },
+  })
+end)
 
+    RegisterNetEvent('titan:cars')      -- Duplate this script if you want to add more vehicles
+    AddEventHandler('titan:cars', function(data)
+      if LocalPlayer.state.isLoggedIn and QBCore.Functions.GetPlayerData().job.name == "titan" then
+        QBCore.Functions.SpawnVehicle('apc', function(veh)
+          SetEntityCoords(veh, Config.Zone.x, Config.Zone.y, Config.Zone.z)
+          SetEntityHeading(veh, Config.Zone.w)
+          SetVehicleLivery(veh, 0)
+          SetVehicleMod(veh, 0, 48)
+          SetVehicleNumberPlateText(veh, "TITAN"..tostring(math.random(1000, 9999)))
+          exports['lj-fuel']:SetFuel(veh, 100.0)
+          TaskWarpPedIntoVehicle(PlayerPedId(), veh, -1)
+          TriggerEvent("vehiclekeys:client:SetOwner", QBCore.Functions.GetPlate(veh))
+          SetVehicleEngineOn(veh, true, true)  
+        end)
+      end
+    end)
+
+--[[Citizen.CreateThread(function(data)
+  local alreadyEnteredZone = false
+  local text = nil
+  while true do
+      wait = 5
+      local ped = PlayerPedId()
+      local inZone = false
+      for cd = 1, #Config.Zones do
+          local dist = #(GetEntityCoords(ped)-vector3(Config.Zones.x, Config.Zones.y, Config.Zones.z))
+          if dist <= 7.5 then
+              wait = 5
+              inZone  = true
+              text = '<b>Title</b></p>[E] Press E to be bald'
+
+              if IsControlJustReleased(0, 38) then
+                  TriggerEvent('titan:menu')
+              end
+              break
+          else
+              wait = 2000
+          end
+      end
+      
+      if inZone and not alreadyEnteredZone then
+          alreadyEnteredZone = true
+          TriggerEvent('cd_drawtextui:ShowUI', 'show', text)
+      end
+
+      if not inZone and alreadyEnteredZone then
+          alreadyEnteredZone = false
+          TriggerEvent('cd_drawtextui:HideUI')
+      end
+      Citizen.Wait(wait)
+  end
+end)]]
 --==================================================
 --                    END GARAGE
 --==================================================
@@ -192,6 +334,68 @@ AddEventHandler('fuckwit:helicopter', function(data)
     Wait(sleep)
   end
 end)
+
+RegisterNetEvent('titan:heli')
+AddEventHandler('titan:heli', function(data)
+  if LocalPlayer.state.isLoggedIn and QBCore.Functions.GetPlayerData().job.name == "titan" then
+    local pos = GetEntityCoords(PlayerPedId())
+      if IsPedInAnyVehicle(PlayerPedId(), false) then
+        QBCore.Functions.DeleteVehicle(GetVehiclePedIsIn(PlayerPedId()))
+      else
+        SetVehicleNumberPlateText(veh, "TITAN"..tostring(math.random(1000, 9999)))
+          QBCore.Functions.SpawnVehicle('POLMAV', function(veh)
+            SetEntityCoords(veh, Config.Zones.x, Config.Zones.y, Config.Zones.z)
+            SetEntityHeading(veh, Config.Zones.w)
+            TaskWarpPedIntoVehicle(PlayerPedId(), veh, -1)
+            exports['lj-fuel']:SetFuel(veh, 100.0)
+            TriggerEvent("vehiclekeys:client:SetOwner", QBCore.Functions.GetPlate(veh))
+            SetVehicleEngineOn(veh, true, true)
+          end)
+        end
+      end
+    end)
+--==================================================
+--                  START THREADS
+--==================================================
+
+Citizen.CreateThread(function(data)
+  local alreadyEnteredZone = false
+  local text = nil
+  while true do
+      wait = 5
+      local ped = PlayerPedId()
+      local inZone = false
+      for k, v in pairs(Config.Locations["titanheli"]) do
+          local dist = #(GetEntityCoords(ped)-vector3(Config.Zones.x, Config.Zones.y, Config.Zones.z))
+          if dist <= 7.5 then
+              wait = 5
+              inZone  = true
+              text = '<b>[E] Helicopter</b>'
+
+              if IsControlJustReleased(0, 38) then
+                  TriggerEvent('titan:heli')
+              end
+              break
+          else
+              wait = 2000
+          end
+      end
+      
+      if inZone and not alreadyEnteredZone then
+          alreadyEnteredZone = true
+          TriggerEvent('cd_drawtextui:ShowUI', 'show', text)
+      end
+
+      if not inZone and alreadyEnteredZone then
+          alreadyEnteredZone = false
+          TriggerEvent('cd_drawtextui:HideUI')
+      end
+      Citizen.Wait(wait)
+  end
+end)
+--==================================================
+--                  END THREADS
+--==================================================
 
 --==================================================
 --                END Helicopter
