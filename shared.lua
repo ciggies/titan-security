@@ -1,42 +1,10 @@
-**qb-target/config.lua __Config.TargetModels__**
-```lua
-["titangarage"] = {
-	models = {
-		'a_m_m_afriamer_01',
-	},
-		options = {
-			{
-				type = "client",
-				event = "titan:menu",
-				icon = "fas fa-briefcase",
-				label = "ADMIN"
-			},
-		},
-		distance = 2.5,
-},
-```
-**qb-target/config.lua __Config.Peds__**
-```lua
-["titangarage"] = {
-    model = 'a_m_m_afriamer_01',
-    coords = vector4(-426.07, 1202.72, 325.76, 200.97),
-    minusOne = true,
-    freeze = true,
-    invincible = true,
-    blockevents = true,
-},
-```
+qb-core/shared.lua
+
+['ifak'] 	= {['name'] = 'ifak', 	['label'] = 'IFAK',     ['weight'] = 1000, 	['type'] = 'item', 	['image'] = 'ifak.png',     ['unique'] = false,     ['useable'] = true, 	['shouldClose'] = true,    ['combinable'] = nil,   ['description'] = 'Sometimes you just need a boost'},
 
 
+qb-ambulancejob/client/wounding.lua under line 63
 
-
-**qb-core/shared.lua**
-```lua
-    ['ifak'] 			 	 	 = {['name'] = 'ifak', 			  			['label'] = 'IFAK', 				['weight'] = 1000, 		['type'] = 'item', 		['image'] = 'ifak.png', 			['unique'] = false, 	['useable'] = true, 	['shouldClose'] = true,    ['combinable'] = nil,   ['description'] = 'Sometimes you just need a boost'},
-```
-
-**qb-ambulancejob/client/wounding.lua under line __63__***
-```lua 
 RegisterNetEvent('hospital:client:UseIfak', function()
     local ped = PlayerPedId()
     QBCore.Functions.Progressbar("use_bandage", "Using IFAK..", 6000, false, true, {
@@ -64,10 +32,10 @@ RegisterNetEvent('hospital:client:UseIfak', function()
         QBCore.Functions.Notify("Failed", "error")
     end)
 end)
-```
 
-**qb-ambulancejob/server/main.lua under line __360__**
-```lua 
+
+qb-ambulancejob/server/main.lua under line 360
+ 
 QBCore.Functions.CreateUseableItem("ifak", function(source, item)
 	local src = source
 	local Player = QBCore.Functions.GetPlayer(src)
@@ -75,4 +43,4 @@ QBCore.Functions.CreateUseableItem("ifak", function(source, item)
 		TriggerClientEvent("hospital:client:UseIfak", src)
 	end
 end)
-```
+

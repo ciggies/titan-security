@@ -13,6 +13,6 @@
 * Personal Stash using qb-target
 
 # Includes 
-* Code for an IFAK
+* Code for an IFAK located in shared.lua
 * IFAK Picture
-
+* Code for qb-target located in qb-target.lua
