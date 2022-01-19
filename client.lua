@@ -1,6 +1,5 @@
 local QBCore = exports['qb-core']:GetCoreObject()
-
-local heli = vector3(-411.6, 1207.5, 325.64)
+local SpawnVehicle = false
 local ClosestShop = nil
 currentGarage = 0
 
@@ -40,174 +39,6 @@ end)
 --                      Garage
 --==================================================
 
---[[function TakeOutVehicle(vehicleInfo)
---  local coords = Config.Locations["titangarage"][currentGarage]
---  if coords then
-      QBCore.Functions.SpawnVehicle(vehicleInfo, function(veh)
-          SetCarItemsInfo()
-          SetVehicleNumberPlateText(veh, "TITAN"..tostring(math.random(1000, 9999)))
-          SetEntityHeading(veh)
-          exports['lj-fuel']:SetFuel(veh, 100.0)
-          closeMenuFull()
-          TaskWarpPedIntoVehicle(PlayerPedId(), veh, -1)
-          TriggerEvent("vehiclekeys:client:SetOwner", QBCore.Functions.GetPlate(veh))
---          TriggerServerEvent("inventory:server:addTrunkItems", QBCore.Functions.GetPlate(veh), Config.CarItems)
-          SetVehicleEngineOn(veh, true, true)
-      end)
-    end
-
-function MenuGarage(currentSelection)
-  local vehicleMenu = {
-    {
-    header = "Titan Vehicles",
-    isMenuHeader = true
-    }
-  }
-
-  local titanVehicles = Config.titanVehicles[QBCore.Functions.GetPlayerData().job.grade.level]
-  for veh, label in pairs(titanVehicles) do
-    vehicleMenu[#vehicleMenu+1] = {
-      header = label,
-      txt = "",
-      params = {
-          event = "titan:TakeOutVehicle",
-          args = {
-            vehicle = veh,
-            currentSelection = currentSelection
-          }
-        }
-      }
-  end
-
-    vehicleMenu[#vehicleMenu+1] = {
-    header = "⬅ Close Menu",
-    txt = "",
-    params = {
-      event = "qb-menu:client:closeMenu"
-    }
-  }
-  exports['qb-menu']:openMenu(vehicleMenu)
-end
-
-    RegisterNetEvent('titan:TakeOutVehicle')
-    AddEventHandler('titan:TakeOutVehicle', function(data)
---      local pos = GetEntityCoords(PlayerPedId())
---      local takeDist = Config.Locations['titangarage'][data.currentSelection]
---      takeDist = vector3(takeDist.x, takeDist.y,  takeDist.z)
---      if #(pos - takeDist) <= 1.5 then
-          local vehicle = data.vehicle
-          TakeOutVehicle(vehicle)
-      end)
-
-RegisterNetEvent('titan:garageHeader')
-AddEventHandler('titan:garageHeader', function(data)
-    local ped = PlayerPedId()
-    local pos = GetEntityCoords()
-    local takeDist = Config.Locations['titangarage'][data.currentSelection]
-     takeDist = vector3(takeDist.x, takeDist.y, takeDist.z)
-     if #(pos - takeDist) <= 1.5 then
-      MenuGarage(data.currentSelection)
-      currentGarage = data.currentSelection
-  end)
-
-RegisterNetEvent('titan:garage')
-AddEventHandler('titan:garage', function()
-  if LocalPlayer.state.isLoggedIn and QBCore.Functions.GetPlayerData().job.name == "titan" then
-      if not headerDrawn then
-        headerDrawn = true
-          exports['qb-menu']:showHeader({
-            {
-              header = 'Titan Garage',
-              params = {
-                event = 'titan:garageHeader',
-                args = {
-                  currentSelection = k,
-                }
-              }
-            }
-          })
-        end
-      end
-    end)
-
-    CreateThread(function()
-      Wait(1000)
-      while true do
-      local headerDrawn = false
-        local sleep = 2000 
-        if LocalPlayer.state.isLoggedIn and QBCore.Functions.GetPlayerData().job.name == "titan" then
-          local pos = GetEntityCoords(PlayerPedId())
-          for k, v in pairs(Config.Locations['titangarage']) do
-            if #(pos - vector3(v.x, v.y, v.z)) < 7.5 then
-              sleep = 5
-              if IsPedInAnyVehicle(PlayerPedId(), false) then
-                DrawText3D(v.x, v.y, v.z, "~r~E~w~ Store Shitter")
-              else
-                if not headerDrawn then
-                  headerDrawn = true
-                  exports['qb-menu']:showHeader({
-                    {
-                      header = 'Titan Garage',
-                      params = {
-                        event = 'titan:garageHeader',
-                        args = {
-                          currentSelection = k,
-                        }
-                      }
-                    }
-                  })
-                end
-              end
-              if IsControlJustReleased(0, 38) then
-                if IsPedInAnyVehicle(PlayerPedId(), false) then
-                  QBCore.Functions.DeleteVehicle(GetVehiclePedIsIn(PlayerPedId()))
-                end
-              end
-            else
-              if headerDrawn then
-                headerDrawn = false
-                exports['qb-menu']:closeMenu()
-              end
-            end
-          end
-        end
-      end
-      Wait(sleep)
-    end)]]
-
-
---[[Citizen.CreateThread(function(data)
-  Wait(1000)
-  while true do
-    local sleep = 2000
-    if LocalPlayer.state.isLoggedIn and QBCore.Functions.GetPlayerData().job.name == "titan" then
-      local pos = GetEntityCoords(PlayerPedId())
-      for k, v in pairs(Config.Locations["titangarage"]) do
-        if #(pos - vector3(v.x, v.y, v.z)) < 7.5 then
-          sleep = 5
-          if IsPedInAnyVehicle(PlayerPedId(), false) then
-            DrawText3D(v.x, v.y, v.z, "~r~E~w~ Store Vehicle")
-          else
-            DrawText3D(v.x, v.y, v.z, "~g~E~w~ Vehicle")
-          end
-          if IsControlJustReleased(0, 38) then
-            if IsPedInAnyVehicle(PlayerPedId(), false) then
-              QBCore.Functions.DeleteVehicle(GetVehiclePedIsIn(PlayerPedId()))
-            else
-              SetVehicleNumberPlateText(veh, "TITAN"..tostring(math.random(1000, 9999)))
-              -- TriggerEvent('titan:garageHeader')
-              TaskWarpPedIntoVehicle(PlayerPedId(), veh, -1)
-              exports['lj-fuel']:SetFuel(veh, 100.0)
-              TriggerEvent('vehiclekeys:client:SetOwner', QBCore.Functions.GetPlate(veh))
-              SetVehicleEngineOn(veh, true, true)
-            end
-          end
-        end
-      end
-    end
-  end
-end)]]
-
 RegisterNetEvent('titan:menu', function(data)
   local id = data.id
   local number = data.number
@@ -228,8 +59,25 @@ RegisterNetEvent('titan:menu', function(data)
             event = "titan:cars"
           }
       },
+      {
+        id = 3,     -- If your copy and pasteing this code below make sure to cahnge the ID
+        header = "Return Vehicle", --- This is the first vehicle can this to what ever
+        txt = "",  -- Basically a description of the vehicle
+        params = {
+          event = "titan:return"
+        }
+    },
   })
 end)
+
+RegisterNetEvent('titan:return')
+AddEventHandler('titan:return', function(data)
+    if IsPedInAnyVehicle(PlayerPedId(), false) then
+      QBCore.Functions.DeleteVehicle(GetVehiclePedIsIn(PlayerPedId()))
+    else
+      QBCore.Functions.DeleteVehicle(GetClosestVehicle(PlayerPedId()))
+    end
+  end)
 
     RegisterNetEvent('titan:cars')      -- Duplate this script if you want to add more vehicles
     AddEventHandler('titan:cars', function(data)
@@ -244,9 +92,25 @@ end)
           TaskWarpPedIntoVehicle(PlayerPedId(), veh, -1)
           TriggerEvent("vehiclekeys:client:SetOwner", QBCore.Functions.GetPlate(veh))
           SetVehicleEngineOn(veh, true, true)  
+          SpawnVehicle = true
         end)
       end
     end)
+
+RegisterNetEvent('titan:return')
+AddEventHandler('titan:return', function()
+    if SpawnVehicle then
+        local Player = QBCore.Functions.GetPlayerData()
+        QBCore.Functions.Notify('Returned vehicle!', 'success')
+        local car = GetVehiclePedIsIn(PlayerPedId(),true)
+        NetworkFadeOutEntity(car, true,false)
+        Citizen.Wait(2000)
+        QBCore.Functions.DeleteVehicle(car)
+    else 
+        QBCore.Functions.Notify("No vehicle to return", "error")
+    end
+    SpawnVehicle = false
+end)
 
 --[[Citizen.CreateThread(function(data)
   local alreadyEnteredZone = false
@@ -320,7 +184,7 @@ AddEventHandler('fuckwit:helicopter', function(data)
                     QBCore.Functions.DeleteVehicle(GetVehiclePedIsIn(PlayerPedId()))
                   else
                 SetVehicleNumberPlateText(veh, "TITAN"..tostring(math.random(1000, 9999)))
-                 QBCore.Functions.SpawnVehicle('POLMAV', function(veh)
+                 QBCore.Functions.SpawnVehicle('frogger', function(veh)
                   TaskWarpPedIntoVehicle(PlayerPedId(), veh, -1)
                   exports['lj-fuel']:SetFuel(veh, 100.0)
                    TriggerEvent("vehiclekeys:client:SetOwner", QBCore.Functions.GetPlate(veh))
@@ -343,7 +207,7 @@ AddEventHandler('titan:heli', function(data)
         QBCore.Functions.DeleteVehicle(GetVehiclePedIsIn(PlayerPedId()))
       else
         SetVehicleNumberPlateText(veh, "TITAN"..tostring(math.random(1000, 9999)))
-          QBCore.Functions.SpawnVehicle('POLMAV', function(veh)
+          QBCore.Functions.SpawnVehicle('frogger', function(veh)
             SetEntityCoords(veh, Config.Zones.x, Config.Zones.y, Config.Zones.z)
             SetEntityHeading(veh, Config.Zones.w)
             TaskWarpPedIntoVehicle(PlayerPedId(), veh, -1)
