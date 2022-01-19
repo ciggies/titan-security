@@ -11,8 +11,15 @@
 * Helicopter Take out and Return using cd_drawtext
 * Customizable Armory Using qb-target
 * Personal Stash using qb-target
+* Built-in Helicam Script
+* Built-in Repeal Script
 
 # Includes 
 * Code for an IFAK located in shared.lua
 * IFAK Picture
 * Code for qb-target located in qb-target.lua
+
+# Change-Logs
+
+### 1.0
+* Intital Release
