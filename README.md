@@ -1,1 +1,14 @@
-**Got Bored So i made this script has garages using the E runs at 0.00ms when not in use and 0.10 when the 3D text renders in, Armory and Personal Stash are getting in built into the scripts using qb-target exports.**
+# Made this a got script for Orion Titan Security
+
+# Dependencies
+* [qb-core](https://github.com/qbcore-framework/qb-core)
+* [cd_drawtextui](https://github.com/dsheedes/cd_drawtextui)
+* [nh-context](https://github.com/nerohiro/nh-context) -- Can be changed out for qb-menu
+* [qb-target](https://github.com/BerkieBb/qb-target)    -- tested on an old and new version
+
+# Features
+* Vehicle Spawn Using Ped and or BoxZone's
+* Helicopter Take out and Return using cd_drawtext
+* Customizable Armory Using qb-target
+* Personal Stash using qb-target
+
