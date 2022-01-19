@@ -1,4 +1,4 @@
-# Made this a got script for Orion Titan Security
+# ORION NETWORKS TITAN SECURITY SCRIPT
 
 # Dependencies
 * [qb-core](https://github.com/qbcore-framework/qb-core)
