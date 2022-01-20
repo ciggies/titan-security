@@ -1,6 +1,6 @@
 # ORION NETWORKS TITAN SECURITY SCRIPT
 
-Runs at ~ 0.00ms to 0.01ms while not inuse and a maximum of 0.05ms while in use
+Runs at ~ 0.00ms to 0.01ms while not inuse and a maximum of 0.17ms while in use
 Optimization is lowered due to inbuilding the heli camera script in
 
 # Dependencies
