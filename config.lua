@@ -19,8 +19,7 @@ Config.Zone = vector4(-422.48, 1192.73, 325.64, 185.4)      -- Vehicle Spawn Poi
 
 
 Config.Locations = {
-    -- Heli Location
-    ["titanheli"] = {
+    ["titanheli"] = {           -- This is the location for the cd_drawtextui and the DrawText3D depending on which one you use
         [1] = vector4(-412.82, 1208.95, 325.64, 345.36),
     },
 }
