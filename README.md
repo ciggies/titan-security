@@ -21,6 +21,7 @@ Optimization is lowered due to inbuilding the heli camera script in
 * Code for an IFAK located in shared.lua
 * IFAK Picture
 * Code for qb-target located in qb-target.lua
+* qb-target exports inside the client.lua for Personal Stash and Armory
 
 # Change-Logs
 
