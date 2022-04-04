@@ -23,3 +23,9 @@ Config.Locations = {
         [1] = vector4(-412.82, 1208.95, 325.64, 345.36),
     },
 }
+
+Config.JobName = {"titan"} 
+
+Config.PlateText = {"TITAN"}
+
+Config.HeliCopterHash = {"frogger"}

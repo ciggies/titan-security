@@ -3,33 +3,18 @@ local SpawnVehicle = false
 local ClosestShop = nil
 currentGarage = 0
 
-local function DrawText3D(x, y, z, text)
-  SetTextScale(0.35, 0.35)
-  SetTextFont(4)
-  SetTextProportional(1)
-  SetTextColour(255, 255, 255, 215)
-  SetTextEntry("STRING")
-  SetTextCentre(true)
-  AddTextComponentString(text)
-  SetDrawOrigin(x,y,z, 0)
-  DrawText(0.0, 0.0)
-  local factor = (string.len(text)) / 370
-  DrawRect(0.0, 0.0+0.0125, 0.017+ factor, 0.03, 0, 0, 0, 75)
-  ClearDrawOrigin()
-end
-
 RegisterNetEvent('titan:security')
 AddEventHandler('titan:security', function()
     local src = source
 --    local Player = QBCore.Functions.GetPlayer(src)
-        if QBCore.Functions.GetPlayerData().job.name == "titan" then
+        if QBCore.Functions.GetPlayerData().job.name == Config.JobName then
             TriggerServerEvent("inventory:server:OpenInventory", "shop", "TitanStore", Config.Store)    -- just opens the store
         end
 end)
 
 RegisterNetEvent('titan:personal:stash')
 AddEventHandler('titan:personal:stash', function()
-    if LocalPlayer.state.isLoggedIn and QBCore.Functions.GetPlayerData().job.name == "titan" then
+    if LocalPlayer.state.isLoggedIn and QBCore.Functions.GetPlayerData().job.name == Config.JobName then
         TriggerServerEvent('inventory:server:OpenInventory', 'stash', 'titanstash'..QBCore.Functions.GetPlayerData().citizenid)
         TriggerEvent('inventory:client:SetCurrentStash', 'titanstash'..QBCore.Functions.GetPlayerData().citizenid)
     end
@@ -85,13 +70,13 @@ AddEventHandler('titan:return', function(data)
 
     RegisterNetEvent('titan:cars')    -- Change titan:cars to somthing else
     AddEventHandler('titan:cars', function(data)  -- Changed titan:cars to same as above
-      if LocalPlayer.state.isLoggedIn and QBCore.Functions.GetPlayerData().job.name == "titan" then -- Change "titan" to name of job
+      if LocalPlayer.state.isLoggedIn and QBCore.Functions.GetPlayerData().job.name == Config.JobName then -- Change "titan" to name of job
         QBCore.Functions.SpawnVehicle('apc', function(veh)    -- change 'apc' to spawn name of the vehicle wanted
           SetEntityCoords(veh, Config.Zone.x, Config.Zone.y, Config.Zone.z)
           SetEntityHeading(veh, Config.Zone.w)  -- This is just the heading of the vehicle when it spawns
           SetVehicleLivery(veh, 0)
           SetVehicleMod(veh, 0, 48)
-          SetVehicleNumberPlateText(veh, "TITAN"..tostring(math.random(1000, 9999)))    -- "TITAN" puts TITAN in at start of Number Plate
+          SetVehicleNumberPlateText(veh, Config.PlateText..tostring(math.random(1000, 9999)))    -- "TITAN" puts TITAN in at start of Number Plate
           exports['lj-fuel']:SetFuel(veh, 100.0)    -- Can Changed ['lj-fuel'] to ['LegacyFuel'] depending on script used
           TaskWarpPedIntoVehicle(PlayerPedId(), veh, -1)
           TriggerEvent("vehiclekeys:client:SetOwner", QBCore.Functions.GetPlate(veh))   -- Set's ownership of vehicle to person who spawned it
@@ -124,59 +109,17 @@ end)
 --==================================================
 
 --==================================================
---       START Helicopter OLD  - Uses DrawText3D
---==================================================
-
---       Citizen.CreateThread(function()
---         Wait(1000)  
---         while true do
---             local sleep = 2000
---             if LocalPlayer.state.isLoggedIn and QBCore.Functions.GetPlayerData().job.name == "titan" then
---             local pos = GetEntityCoords(PlayerPedId())
---             for k, v in pairs(Config.Locations["titanheli"]) do
---               if #(pos - vector3(v.x, v.y, v.z)) < 7.5 then
---                 sleep = 5
---                 if IsPedInAnyVehicle(PlayerPedId(), false) then
---                 DrawText3D(v.x, v.y, v.z, "~r~E~w~ Store Helicopter")
---               else
---                 DrawText3D(v.x, v.y, v.z, "~g~E~w~ Fucking shitty cunt")
---               end
---                 if IsControlJustReleased(0, 38) then
---                   if IsPedInAnyVehicle(PlayerPedId(), false) then
---                     QBCore.Functions.DeleteVehicle(GetVehiclePedIsIn(PlayerPedId()))
---                   else
---                 SetVehicleNumberPlateText(veh, "TITAN"..tostring(math.random(1000, 9999)))
---                  QBCore.Functions.SpawnVehicle('frogger', function(veh)
---                   TaskWarpPedIntoVehicle(PlayerPedId(), veh, -1)
---                   exports['lj-fuel']:SetFuel(veh, 100.0)
---                    TriggerEvent("vehiclekeys:client:SetOwner", QBCore.Functions.GetPlate(veh))
---                    SetVehicleEngineOn(veh, true, true)
---                  end)
---             end
---           end
---         end
---       end
---     end
---     Wait(sleep)
---   end
--- end)
-
---==================================================
---       END Helicopter OLD  - Uses DrawText3D
---==================================================
-
---==================================================
 --       START Helicopter - Uses cd_drawtextui
 --==================================================
 
 RegisterNetEvent('titan:heli')
 AddEventHandler('titan:heli', function(data)
-  if LocalPlayer.state.isLoggedIn and QBCore.Functions.GetPlayerData().job.name == "titan" then   -- Replace "titan" with the job name
+  if LocalPlayer.state.isLoggedIn and QBCore.Functions.GetPlayerData().job.name == Config.JobName then   -- Replace "titan" with the job name
     local pos = GetEntityCoords(PlayerPedId())
       if IsPedInAnyVehicle(PlayerPedId(), false) then
         QBCore.Functions.DeleteVehicle(GetVehiclePedIsIn(PlayerPedId()))
       else
-        SetVehicleNumberPlateText(veh, "TITAN"..tostring(math.random(1000, 9999)))
+        SetVehicleNumberPlateText(veh, Config.PlateText..tostring(math.random(1000, 9999)))
           QBCore.Functions.SpawnVehicle('frogger', function(veh)    -- Replace frogger with spawn code of helicopter wished to use
             SetEntityCoords(veh, Config.Zones.x, Config.Zones.y, Config.Zones.z)
             SetEntityHeading(veh, Config.Zones.w)
@@ -252,7 +195,7 @@ exports["qb-target"]:AddCircleZone("tarmory", vector3(-424.41, 1213.82, 325.76),
               label = "Armory",
           },
        },
-       job = {"titan"},   -- Change "titan" to the name of the job
+       job = {Config.JobName},   -- Change "titan" to the name of the job
       distance = 2.1
   })
 
@@ -273,6 +216,6 @@ exports["qb-target"]:AddCircleZone("personalstash", vector3(-426.27, 1215.98, 32
               label = "Personal Locker",
           },
        },
-       job = {"titan"},  -- Change "titan" to the name of the job
+       job = {Config.JobName},  -- Change "titan" to the name of the job
       distance = 2.1
   })

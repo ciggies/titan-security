@@ -6,8 +6,8 @@ Optimization is lowered due to inbuilding the heli camera script in
 # Dependencies
 * [qb-core](https://github.com/qbcore-framework/qb-core)
 * [cd_drawtextui](https://github.com/dsheedes/cd_drawtextui)
-* [nh-context](https://github.com/nerohiro/nh-context) -- Can be changed out for qb-menu
-* [qb-target](https://github.com/BerkieBb/qb-target)    -- tested on an old and new version
+* [nh-context](https://github.com/nerohiro/nh-context)
+* [qb-target](https://github.com/BerkieBb/qb-target)
 
 # Features
 * Vehicle Spawn Using Ped and or BoxZone's
@@ -24,6 +24,14 @@ Optimization is lowered due to inbuilding the heli camera script in
 * qb-target exports inside the client.lua for Personal Stash and Armory
 
 # Change-Logs
+
+### 1.1
+* Quality of Life Update
+* Added Config.PlateText For Vehicle Plates when spawned
+* Added Config.JobName For Job Checks
+* Removed Draw3dText
+* Removed Unused code
+* Moved IFAK Code & qb-target code in Usefull folder
 
 ### 1.0
 * Intital Release
